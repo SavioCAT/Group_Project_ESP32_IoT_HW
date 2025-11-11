@@ -7,7 +7,7 @@
 typedef struct struct_message {
     int id;
     char msg[64];
-} struct_message; //struct to receive the data.
+} struct_message; //struct to receive the data. /!\ Should be the same as the slave /!\ 
 
 struct_message myData; //Initialise the data struct to handle the incoming message from slave. 
 

@@ -9,7 +9,7 @@ uint8_t masterMacAddress[] = {0x84, 0xF7, 0x03, 0x12, 0xAE, 0x88}; //Mac address
 typedef struct struct_message {
     int id;
     char msg[64];
-}struct_message; //Data struct that will be send to the master. 
+}struct_message; //Data struct that will be send to the master. /!\ Should be the same as the master /!\
 
 struct_message myData; //Data that will be send. 
 esp_now_peer_info_t peerInfo; // Usefull to know if the packet is correctly send. 
