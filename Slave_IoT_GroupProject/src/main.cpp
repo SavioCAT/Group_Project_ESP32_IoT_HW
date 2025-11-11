@@ -4,10 +4,11 @@
 #include <esp_now.h>
 
 uint8_t masterMacAddress[] = {0x84, 0xF7, 0x03, 0x12, 0xAE, 0x88}; //Mac address of the master. 
+//84:F7:03:12:AE:88
 
 typedef struct struct_message {
     int id;
-    char msg[1024];
+    char msg[64];
 }struct_message; //Data struct that will be send. 
 
 struct_message myData; //Data that will be send. 
@@ -23,7 +24,7 @@ void callback_sender(const uint8_t *mac_addr, esp_now_send_status_t status) {
 
 void setup() {
   Serial.begin(115200);
-  WiFi.mode(WIFI_MODE_STA); // Set WiFi to Station mode
+  WiFi.mode(WIFI_STA); // Set WiFi to Station mode
 
   if (esp_now_init() != ESP_OK) {
     Serial.println("Error initializing ESP-NOW");
@@ -42,6 +43,8 @@ void setup() {
 
 void loop() {
   delay(1000);
+  Serial.println("I'm the sender");
+  Serial.println(WiFi.channel());
   strcpy(myData.msg, "Hello World !");
   myData.id = 1;
 

@@ -6,7 +6,7 @@
 
 typedef struct struct_message {
     int id;
-    char msg[1024];
+    char msg[64];
 } struct_message; //struct to receive the data.
 
 struct_message myData;
@@ -20,7 +20,7 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
 
 void setup() {
   Serial.begin(115200);
-  WiFi.mode(WIFI_MODE_STA); // Set WiFi to Station mode
+  WiFi.mode(WIFI_STA); // Set WiFi to Station mode
 
   if (esp_now_init() != ESP_OK) {
     Serial.println("Error initializing ESP-NOW");
