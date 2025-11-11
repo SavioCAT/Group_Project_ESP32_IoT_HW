@@ -41,6 +41,7 @@ void setup() {
 }
 
 void loop() {
+  delay(1000);
   strcpy(myData.msg, "Hello World !");
   myData.id = 1;
 
