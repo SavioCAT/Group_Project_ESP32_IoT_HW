@@ -9,7 +9,7 @@ typedef struct struct_message {
     char msg[64];
 } struct_message; //struct to receive the data.
 
-struct_message myData;
+struct_message myData; //Initialise the data struct to handle the incoming message from slave. 
 
 void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
   memcpy(&myData, incomingData, sizeof(myData));
@@ -22,14 +22,14 @@ void setup() {
   Serial.begin(115200);
   WiFi.mode(WIFI_STA); // Set WiFi to Station mode
 
-  if (esp_now_init() != ESP_OK) {
+  if (esp_now_init() != ESP_OK) { // Check if the esp-now init is okay or not.
     Serial.println("Error initializing ESP-NOW");
     return;
   } else {
-    esp_now_register_recv_cb(OnDataRecv);
+    esp_now_register_recv_cb(OnDataRecv); //Set the callback function when the master receive a message. 
   }
 }
 
 void loop() {
-  delay(1);
+  delay(1); 
 }
