@@ -3,17 +3,19 @@
 #include <esp_wifi.h>
 #include <esp_now.h>
 
+
 typedef struct struct_message {
     int id;
     char msg[1024];
-};
+} struct_message; //struct to receive the data.
 
-void callback_sender(const uint8_t *mac_addr, esp_now_send_status_t status) {
-  if (status == ESP_NOW_SEND_SUCCESS) {
-    Serial.println("ESP-NOW packet successfully send");
-  } else {
-    Serial.println("[X] ESP-NOW packet failed to send");
-  }
+struct_message myData;
+
+void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
+  memcpy(&myData, incomingData, sizeof(myData));
+  Serial.println("[+] Data received");
+  Serial.printf("ID: %d\n", myData.id);
+  Serial.printf("Msg: %s\n", myData.msg);
 }
 
 void setup() {
@@ -23,11 +25,11 @@ void setup() {
   if (esp_now_init() != ESP_OK) {
     Serial.println("Error initializing ESP-NOW");
     return;
+  } else {
+    esp_now_register_recv_cb(OnDataRecv);
   }
 }
 
 void loop() {
-  Serial.print("MAC Address: ");
-  Serial.println(WiFi.macAddress());
-  delay(10000);
+  delay(1);
 }
