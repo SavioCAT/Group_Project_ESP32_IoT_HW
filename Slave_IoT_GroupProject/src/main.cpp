@@ -2,17 +2,21 @@
 #include <WiFi.h>
 #include <esp_wifi.h>
 #include <esp_now.h>
+#include <DHT.h>
 
-uint8_t masterMacAddress[] = {0x84, 0xF7, 0x03, 0x12, 0xAE, 0x88}; //Mac address of the master. 
-//84:F7:03:12:AE:88
+#define ID 1
+#define DHTPin 4
 
 typedef struct struct_message {
     int id;
-    char msg[64];
+    int humidity;
+    int temp;
 }struct_message; //Data struct that will be send to the master. /!\ Should be the same as the master /!\
 
 struct_message myData; //Data that will be send. 
 esp_now_peer_info_t peerInfo; // Usefull to know if the packet is correctly send. 
+uint8_t masterMacAddress[] = {0x7C, 0xDF, 0xA1, 0xBD, 0xD1, 0xC0}; //Mac address of the master. 84:F7:03:12:AE:88
+DHT dhtSensor(DHT11, DHTPin);
 
 void callback_sender(const uint8_t *mac_addr, esp_now_send_status_t status) {
   if (status == ESP_NOW_SEND_SUCCESS) {
@@ -43,10 +47,10 @@ void setup() {
 
 void loop() {
   delay(1000);
-  Serial.println("I'm the sender");
-  Serial.println(WiFi.channel());
-  strcpy(myData.msg, "Hello World !");
-  myData.id = 1;
+  //Serial.println(WiFi.channel());
+  myData.id = ID;
+  myData.humidity = dhtSensor.readHumidity();
+  myData.temp = dhtSensor.readTemperature();
 
   esp_err_t err_send = esp_now_send(masterMacAddress, (uint8_t *) &myData, sizeof(myData)); 
   if (err_send == ESP_OK) { //Check if the message is successfully send. 

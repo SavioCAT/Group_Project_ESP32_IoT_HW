@@ -6,16 +6,18 @@
 
 typedef struct struct_message {
     int id;
-    char msg[64];
-} struct_message; //struct to receive the data. /!\ Should be the same as the slave /!\ 
+    int humidity;
+    int temp;
+}struct_message; //struct to receive the data. /!\ Should be the same as the slave /!\ 
 
 struct_message myData; //Initialise the data struct to handle the incoming message from slave. 
 
 void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
   memcpy(&myData, incomingData, sizeof(myData));
-  Serial.println("[+] Data received");
+  Serial.println("[+] Data received ");
   Serial.printf("ID: %d\n", myData.id);
-  Serial.printf("Msg: %s\n", myData.msg);
+  Serial.printf("Humidity: %d\n", myData.humidity);
+  Serial.printf("Temperature: %d\n", myData.temp);
 }
 
 void setup() {
@@ -31,5 +33,5 @@ void setup() {
 }
 
 void loop() {
-  delay(1); 
+  delay(1);
 }
