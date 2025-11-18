@@ -4,19 +4,19 @@
 #include <esp_now.h>
 #include <DHT.h>
 
-#define ID 1
+#define ID 5
 #define DHTPin 4
 
 typedef struct struct_message {
     int id;
-    int humidity;
-    int temp;
+    float humidity;
+    float temp;
 }struct_message; //Data struct that will be send to the master. /!\ Should be the same as the master /!\
 
 struct_message myData; //Data that will be send. 
 esp_now_peer_info_t peerInfo; // Usefull to know if the packet is correctly send. 
-uint8_t masterMacAddress[] = {0x7C, 0xDF, 0xA1, 0xBD, 0xD1, 0xC0}; //Mac address of the master. 84:F7:03:12:AE:88
-DHT dhtSensor(DHT11, DHTPin);
+uint8_t masterMacAddress[] = {0x84, 0xF7, 0x03, 0x12, 0xAE, 0x88}; //Mac address of the master. 84:F7:03:12:AE:88
+DHT dhtSensor(DHTPin, DHT11);
 
 void callback_sender(const uint8_t *mac_addr, esp_now_send_status_t status) {
   if (status == ESP_NOW_SEND_SUCCESS) {
@@ -49,8 +49,19 @@ void loop() {
   delay(1000);
   //Serial.println(WiFi.channel());
   myData.id = ID;
-  myData.humidity = dhtSensor.readHumidity();
-  myData.temp = dhtSensor.readTemperature();
+  Serial.print(dhtSensor.readTemperature());
+
+  if (!isnan(dhtSensor.readHumidity())) {
+    myData.humidity = dhtSensor.readHumidity();
+  } else {
+    myData.humidity = -10000; // handling the case if readHumidity return a NaN
+  }
+
+  if (!isnan(dhtSensor.readTemperature())) {
+    myData.temp = dhtSensor.readTemperature();
+  } else {
+    myData.temp= -10000; // handling the case if readTemperature return a NaN
+  }
 
   esp_err_t err_send = esp_now_send(masterMacAddress, (uint8_t *) &myData, sizeof(myData)); 
   if (err_send == ESP_OK) { //Check if the message is successfully send. 
