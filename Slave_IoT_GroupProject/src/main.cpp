@@ -4,8 +4,10 @@
 #include <esp_now.h>
 #include <DHT.h>
 
-#define ID 5
+#define ID 42
 #define DHTPin 4
+#define uS_TO_S_FACTOR 1000000  /* Conversion factor for micro seconds to seconds */
+#define TIME_TO_SLEEP  5        /* Time ESP32 will go to sleep (in seconds) */
 
 typedef struct struct_message {
     int id;
@@ -15,7 +17,7 @@ typedef struct struct_message {
 
 struct_message myData; //Data that will be send. 
 esp_now_peer_info_t peerInfo; // Usefull to know if the packet is correctly send. 
-uint8_t masterMacAddress[] = {0x84, 0xF7, 0x03, 0x12, 0xAE, 0x88}; //Mac address of the master. 84:F7:03:12:AE:88
+uint8_t masterMacAddress[] = {0x78, 0xE3, 0x6D, 0x07, 0x21, 0x60}; //Mac address of the master. 84:F7:03:12:AE:88, 78:E3:6D:07:21:60
 DHT dhtSensor(DHTPin, DHT11);
 
 void callback_sender(const uint8_t *mac_addr, esp_now_send_status_t status) {
@@ -43,11 +45,13 @@ void setup() {
       return;
     }
   }
+  
+  dhtSensor.begin();
 }
 
 void loop() {
-  delay(1000);
-  //Serial.println(WiFi.channel());
+  Serial.println(WiFi.channel());
+  //delay(1000);
   myData.id = ID;
   Serial.print(dhtSensor.readTemperature());
 
@@ -69,4 +73,7 @@ void loop() {
   } else {
     Serial.println("[X] ERROR");
   }
+
+  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+  esp_deep_sleep_start();
 }
