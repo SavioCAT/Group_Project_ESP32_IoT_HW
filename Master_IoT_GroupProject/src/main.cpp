@@ -5,7 +5,7 @@
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
 
-#define BROKER_IP "127.0.0.1"
+#define BROKER_IP "172.20.10.4"
 #define BROKER_PORT 1883
 #define ESP_MASTER_PUBLISH_TOPIC "iot/master"
 
@@ -39,16 +39,21 @@ void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
   doc["ID_ESP"] =  myData.id;
   doc["Temp"] =  myData.temp;
   doc["Humidity"] =  myData.humidity;
+
+  String jsonString; // Create a String object to hold the serialized JSON
+  serializeJson(doc, jsonString); // Serialize JSON to string object
+  mqttAgent.publish(ESP_MASTER_PUBLISH_TOPIC, jsonString.c_str()); // Publish Object String converted to c string to MQTT topic
 }
 
 void setup() {
   Serial.begin(115200);
   WiFi.mode(WIFI_STA); // Set WiFi to Station mode
   
-  char* ssid = ""; // SSID of the WLAN
-  char* password = ""; // Password for the WLAN 
+  char* ssid = "iPhone de Savio"; // SSID of the WLAN
+  char* password = "123456789"; // Password for the WLAN 
   WiFi.begin(ssid, password); //Connect to the WiFi network
   while(WiFi.status() != WL_CONNECTED){ //Wait until connected
+    Serial.println("Trying to connect...");
     delay(100);
   }
 
@@ -80,11 +85,7 @@ void loop() {
       }
     }
   }
-
-  String jsonString; // Create a String object to hold the serialized JSON
-  serializeJson(doc, jsonString); // Serialize JSON to string object
-  mqttAgent.publish(ESP_MASTER_PUBLISH_TOPIC, jsonString.c_str()); // Publish Object String converted to c string to MQTT topic
-
+  Serial.println(WiFi.channel());
   mqttAgent.loop();
-  delay(1);
+  delay(50);
 }
