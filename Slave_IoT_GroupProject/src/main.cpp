@@ -73,7 +73,7 @@ void loop() {
   } else {
     Serial.println("[X] ERROR");
   }
-
+  delay(1000);
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
   esp_deep_sleep_start();
 }
