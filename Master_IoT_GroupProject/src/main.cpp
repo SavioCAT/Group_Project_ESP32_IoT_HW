@@ -50,7 +50,7 @@ void setup() {
   WiFi.mode(WIFI_STA); // Set WiFi to Station mode
   
   char* ssid = "iPhone de Savio"; // SSID of the WLAN
-  char* password = "123456789"; // Password for the WLAN 
+  char* password = "Alpha123!"; // Password for the WLAN 
   WiFi.begin(ssid, password); //Connect to the WiFi network
   while(WiFi.status() != WL_CONNECTED){ //Wait until connected
     Serial.println("Trying to connect...");
@@ -85,7 +85,8 @@ void loop() {
       }
     }
   }
-  Serial.println(WiFi.channel());
+  Serial.printf("Current WiFi channel: %d\n", WiFi.channel());
+  Serial.printf("Mac address: %s\n", WiFi.macAddress());
   mqttAgent.loop();
-  delay(50);
+  delay(1000);
 }

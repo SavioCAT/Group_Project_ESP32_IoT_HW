@@ -8,6 +8,7 @@
 #define DHTPin 4
 #define uS_TO_S_FACTOR 1000000  /* Conversion factor for micro seconds to seconds */
 #define TIME_TO_SLEEP  5        /* Time ESP32 will go to sleep (in seconds) */
+#define CHANNEL 1
 
 typedef struct struct_message {
     int id;
@@ -31,6 +32,7 @@ void callback_sender(const uint8_t *mac_addr, esp_now_send_status_t status) {
 void setup() {
   Serial.begin(115200);
   WiFi.mode(WIFI_STA); // Set WiFi to Station mode
+  esp_wifi_set_channel(CHANNEL, WIFI_SECOND_CHAN_NONE);
 
   if (esp_now_init() != ESP_OK) { //Check if the esp-now init is okay or not. 
     Serial.println("Error initializing ESP-NOW");
@@ -51,7 +53,6 @@ void setup() {
 
 void loop() {
   Serial.println(WiFi.channel());
-  //delay(1000);
   myData.id = ID;
   Serial.print(dhtSensor.readTemperature());
 
@@ -74,6 +75,7 @@ void loop() {
     Serial.println("[X] ERROR");
   }
   delay(1000);
+  Serial.printf("Current WiFi channel: %d\n", WiFi.channel());
   esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
   esp_deep_sleep_start();
 }
