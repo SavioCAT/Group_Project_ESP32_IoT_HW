@@ -1,3 +1,24 @@
 # Group_Project_ESP32_IoT_HW
 Group project for IoT lecture Heriot Watt
 <img width="1648" height="836" alt="image" src="https://github.com/user-attachments/assets/297872e3-2616-4f4f-b5c8-9f6528b0ab8d" />
+
+## Abstract
+
+<p>The main objective of this project was to design a ESP32 network, in order to recover environmental data. In our network we have one master and 4 slaves who are transmitting temperature and humidity data throught ESP-NOW protocol to the master. The main purpose of using this protocol was to make a simple, reliable and energy efficient network.</p><br>
+<p></p>
+
+## Objective of the project
+
+<p></p>
+
+## Code review
+
+<p></p>
+
+## Demonstration
+
+<p></p>
+
+## Physical measurements
+
+<p></p>

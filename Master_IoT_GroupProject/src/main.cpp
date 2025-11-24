@@ -5,9 +5,11 @@
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
 
-#define BROKER_IP "172.20.10.4"
+#define BROKER_IP "10.198.199.49"
 #define BROKER_PORT 1883
 #define ESP_MASTER_PUBLISH_TOPIC "iot/master"
+
+#define ALARM_HOT 30.0
 
 void callback(char* topic, byte* payload, unsigned int length);
 WiFiClient wifiClient;
@@ -30,28 +32,43 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 struct_message myData; //Initialise the data struct to handle the incoming message from slave. 
 
-void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
+
+void OnDataRecv(const uint8_t * info, const uint8_t *incomingData, int len) {
   memcpy(&myData, incomingData, sizeof(myData));
+
+  bool alarmHigh = (myData.temp > ALARM_HOT);
+
   Serial.println("[+] Data received ");
   Serial.printf("ID: %d\n", myData.id);
   Serial.printf("Humidity: %f\n", myData.humidity);
   Serial.printf("Temperature: %f\n", myData.temp);
-  doc["ID_ESP"] =  myData.id;
-  doc["Temp"] =  myData.temp;
-  doc["Humidity"] =  myData.humidity;
+
+  doc.clear();
+  doc["id"] =  myData.id;
+  doc["temp"] =  myData.temp;
+  doc["humidity"] =  myData.humidity;
+  doc["alarm"] = alarmHigh;
 
   String jsonString; // Create a String object to hold the serialized JSON
   serializeJson(doc, jsonString); // Serialize JSON to string object
   mqttAgent.publish(ESP_MASTER_PUBLISH_TOPIC, jsonString.c_str()); // Publish Object String converted to c string to MQTT topic
+
+  if (alarmHigh){
+
+  }
 }
 
 void setup() {
   Serial.begin(115200);
   WiFi.mode(WIFI_STA); // Set WiFi to Station mode
   
-  char* ssid = "iPhone de Savio"; // SSID of the WLAN
-  char* password = "Alpha123!"; // Password for the WLAN 
+  char* ssid = "Mohammed_5G_joe"; // SSID of the WLAN
+  char* password = "Dubai2020"; // Password for the WLAN 
   WiFi.begin(ssid, password); //Connect to the WiFi network
+  Serial.print("WiFi Channel: ");
+  Serial.println(WiFi.channel());
+  Serial.print("Connecting to: ");
+
   while(WiFi.status() != WL_CONNECTED){ //Wait until connected
     Serial.println("Trying to connect...");
     delay(100);
@@ -85,8 +102,7 @@ void loop() {
       }
     }
   }
-  Serial.printf("Current WiFi channel: %d\n", WiFi.channel());
-  Serial.printf("Mac address: %s\n", WiFi.macAddress());
+  Serial.println(WiFi.channel());
   mqttAgent.loop();
-  delay(1000);
+  delay(50);
 }
