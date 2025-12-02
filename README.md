@@ -1,7 +1,8 @@
 # Group Project ESP32 IoT HW
 Group project for IoT lecture Heriot Watt
 
-> [Group member]
+> [!NOTE]
+> Group members
 > 1. Savio BOISSINOT H00513570
 > 
 > 
