@@ -4,7 +4,7 @@ Group project for IoT lecture Heriot Watt
 > [!NOTE]
 > GROUP MEMBERS
 > 1. Savio BOISSINOT H00513570
-> 2. 
+> 2. Olayinka Abiodun
 > 3.
 > 4.
 > 5.
