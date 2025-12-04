@@ -38,7 +38,6 @@ Group project for IoT lecture Heriot Watt
 </ul> 
 <br>
 
-
 ### Mutual code
 
 <p>For the data transmission, we use a C structure crafted in the slave node to handle the message. This C structure is then send by ESP-NOW protocol to the master node. This C structure contain different information such as the identifier of the slave node and the value of the temperature and humidity.</p>
@@ -75,10 +74,74 @@ if (esp_now_init() != ESP_OK) { //Start and check if the esp-now init is okay or
 esp_now_register_recv_cb(callback_receive); //Register the callback function when it receive a message 
 esp_now_register_send_cb(callback_sender); //Register the callback function when it send a message  
 ```
+<p>Once the functions registered, the ESP should do environmental data measurements, check the format of these data, and if it correct, send it to the master</p>
+
+```cpp
+float humidity = dhtSensor.readHumidity(); // Read humidity
+float temp = dhtSensor.readTemperature(); // Read temperature as Celsius
+
+if (!isnan(humidity)) { // Check if readHumidity return a valid number
+    myData.humidity = humidity;
+} else {
+    myData.humidity = -10000; // handling the case if readHumidity return a NaN
+}
+
+if (!isnan(temp)) { // Check if readTemperature return a valid number
+    myData.temp = temp;
+    /**
+     * Code shortened for a better comprehension
+     */ 
+} else {
+    myData.temp= -10000; // handling the case if readTemperature return a NaN
+}
+
+esp_err_t err_send = esp_now_send(masterMacAddress, (uint8_t *) &myData, sizeof(myData)); // Send the data to the master with ESP-NOW protocol.
+if (err_send == ESP_OK) { //Check if the message is successfully send. 
+    Serial.println("[+] SUCCESS");
+} else {
+    Serial.println("[X] ERROR");
+}
+```
 
 ### Master code
 
-<p></p>
+<p>Regarding the code running on the ESP master, we had to connect the master to a Wi-Fi network in order to incorporate this ESP into a WLAN, and thus send messages to the MQTT broker in order to get data visualisation on the Node-RED dashboard.</p>
+
+```cpp
+char* ssid = "SSID"; // SSID of the WLAN
+char* password = "Password"; // Password for the WLAN 
+WiFi.begin(ssid, password); //Connect to the WiFi network
+```
+
+<p>Now that the ESP is connected, like the slave code, we have to register the callback function for when the ESP receives ESP-NOW messages. The callback function permits us to process the data structure that the master receives and extract the different elements of it. Once the different elements are extracted, the master crafts a JSON in order to send the acquired data to the MQTT broker.</p>
+
+```cpp
+void OnDataRecv(const uint8_t * info, const uint8_t *incomingData, int len) {
+  memcpy(&myData, incomingData, sizeof(myData));
+
+  bool alarmHigh = (myData.temp > ALARM_HOT);
+
+  Serial.println("[+] Data received ");
+  Serial.printf("ID: %d\n", myData.id);
+  Serial.printf("Humidity: %f\n", myData.humidity);
+  Serial.printf("Temperature: %f\n", myData.temp);
+
+  doc.clear();
+  doc["id"] =  myData.id;
+  doc["temp"] =  myData.temp;
+  doc["humidity"] =  myData.humidity;
+  
+  doc["alarm"] = alarmHigh;
+
+  String jsonString; // Create a String object to hold the serialized JSON
+  serializeJson(doc, jsonString); // Serialize JSON to string object
+  mqttAgent.publish(ESP_MASTER_PUBLISH_TOPIC, jsonString.c_str()); // Publish Object String converted to c string to MQTT topic
+
+  if (alarmHigh){
+
+  }
+}
+```
 
 ## NodeRed interface
 

@@ -17,6 +17,7 @@
 #define WARN_COLD 10.0
 #define WARN_HOT 25.0
 #define NEOPIXEL_TYPE NEO_RGB + NEO_KHZ800
+#define AWAKE_CYCLES_BEFORE_SLEEP 10
 
 bool globalAlarm = false;
 uint8_t IDculprit = 0;
@@ -153,22 +154,22 @@ void loop() {
   Serial.println(WiFi.channel());
   myData.id = ID;
 
-  float humidity = dhtSensor.readHumidity();
-  float temp = dhtSensor.readTemperature();
+  float humidity = dhtSensor.readHumidity(); // Read humidity
+  float temp = dhtSensor.readTemperature(); // Read temperature as Celsius
 
-  if (!isnan(humidity)) {
+  if (!isnan(humidity)) { // Check if readHumidity return a valid number
     myData.humidity = humidity;
   } else {
     myData.humidity = -10000; // handling the case if readHumidity return a NaN
   }
 
-  if (!isnan(temp)) {
+  if (!isnan(temp)) { // Check if readTemperature return a valid number
     myData.temp = temp;
-    localAlarm = (temp > ALARM_HOT);
+    localAlarm = (temp > ALARM_HOT); // Check if local alarm should be raised by verifying if the temperature is above the ALARM_HOT threshold
     unsigned long now = millis(); //Time since the program start
 
     if(localAlarm){
-      if (now - lastAlertSentMs >= ALERT_RESEND_INTERVAL_MS){ // Check b
+      if (now - lastAlertSentMs >= ALERT_RESEND_INTERVAL_MS){ // Check if enough time has passed since the last alert was sent
         Serial.println("Alert being sent");
         sendAlertToPeers(true);
         lastAlertSentMs = now;
@@ -195,7 +196,7 @@ void loop() {
     myData.temp= -10000; // handling the case if readTemperature return a NaN
   }
 
-  esp_err_t err_send = esp_now_send(masterMacAddress, (uint8_t *) &myData, sizeof(myData)); 
+  esp_err_t err_send = esp_now_send(masterMacAddress, (uint8_t *) &myData, sizeof(myData)); // Send the data to the master with ESP-NOW protocol.
   if (err_send == ESP_OK) { //Check if the message is successfully send. 
     Serial.println("[+] SUCCESS");
   } else {
@@ -204,8 +205,6 @@ void loop() {
   Serial.printf("Current WiFi channel: %d\n", WiFi.channel());
 
   static int awakeCycles = 0;
-  const int AWAKE_CYCLES_BEFORE_SLEEP = 10;
-
   bool anyAlarm = globalAlarm || localAlarm;
 
   if(!anyAlarm){
