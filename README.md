@@ -10,11 +10,9 @@ Group project for IoT lecture Heriot Watt
 > 5.
 > 6.
 
-<!-- <img width="1648" height="836" alt="image" src="https://github.com/user-attachments/assets/297872e3-2616-4f4f-b5c8-9f6528b0ab8d" /> -->
-
 ## Abstract
 
-<p>The main objective of this project was to design a ESP32 network, in order to recover environmental data. In our network we have one master and 4 slaves who are transmitting temperature and humidity data throught ESP-NOW protocol to the master. The main purpose of using this protocol was to make a simple, reliable and energy efficient network.</p><br>
+<p>The main objective of this project was to design a ESP32 network, in order to recover environmental data. In our network we have one master and 4 slaves who are transmitting temperature and humidity data throught ESP-NOW protocol to the master. The main purpose of using this protocol was to make a simple, reliable and energy efficient network.</p>
 
 ## Code
 
@@ -145,11 +143,22 @@ void OnDataRecv(const uint8_t * info, const uint8_t *incomingData, int len) {
 
 ## NodeRed interface
 
+<img width="1648" height="836" alt="image" src="https://github.com/user-attachments/assets/297872e3-2616-4f4f-b5c8-9f6528b0ab8d" />
+
 <p></p>
 
 ## Energy optimisation
 
-<p></p>
+<p>We have optimized the energy consumption of slave nodes by using deep sleep, a mode in which the microcontroller shuts down almost all of its modules and consumes only a few microamperes.</p>
+
+<p>In our code, the ESP32 remains awake only to read environmental data, send data to the master, and check for alarms. If there are no local or global alarms, it counts the activity cycles during which it is awake, and once a certain number is reached, it automatically goes into deep sleep.</p>
+
+```cpp
+esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+esp_deep_sleep_start(); // Set the ESP32 in deep sleep mode for the time setup in esp_sleep_enable_timer_wakeup()
+```
+
+<p>In addition, using ESP-NOW instead of a Wi-Fi connection also allows us to save energy. </p>
 
 ## Demonstration
 
