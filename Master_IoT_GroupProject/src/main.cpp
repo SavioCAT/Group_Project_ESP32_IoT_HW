@@ -47,6 +47,7 @@ void OnDataRecv(const uint8_t * info, const uint8_t *incomingData, int len) {
   doc["id"] =  myData.id;
   doc["temp"] =  myData.temp;
   doc["humidity"] =  myData.humidity;
+  
   doc["alarm"] = alarmHigh;
 
   String jsonString; // Create a String object to hold the serialized JSON

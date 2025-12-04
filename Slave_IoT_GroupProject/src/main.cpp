@@ -8,8 +8,8 @@
 #define ID 42
 #define DHTPin 4
 #define NEOPIXEL_PIN 27
-#define uS_TO_S_FACTOR 1000000  /* Conversion factor for micro seconds to seconds */
-#define TIME_TO_SLEEP  5        /* Time ESP32 will go to sleep (in seconds) */
+#define uS_TO_S_FACTOR 1000000  // Conversion factor for micro seconds to seconds
+#define TIME_TO_SLEEP  5        // Time ESP32 will go to sleep (in seconds)
 #define CHANNEL 6
 
 #define ALARM_COLD 0.0
@@ -77,7 +77,7 @@ void raiseAlarm(){
   pixel.show();
 }
 
-void espNowcallback(const uint8_t *info, const uint8_t *data, int len){
+void callback_receive(const uint8_t *info, const uint8_t *data, int len){
   Serial.printf("data recieved, len=%d\n", len);
   if (len == sizeof(MessageAlert)){
     MessageAlert alert;
@@ -125,8 +125,8 @@ void setup() {
     return;
   }
 
-  esp_now_register_recv_cb(espNowcallback);
-  esp_now_register_send_cb(callback_sender); //Register the callback function for the sender. 
+  esp_now_register_recv_cb(callback_receive); //Register the callback function when it receive a message 
+  esp_now_register_send_cb(callback_sender); //Register the callback function when it send a message  
   
   memset(&peerInfo, 0, sizeof(peerInfo));
   memcpy(peerInfo.peer_addr, masterMacAddress, 6); //Copy the MAC address in the peer_addr field of peerInfo. 
@@ -153,24 +153,22 @@ void loop() {
   Serial.println(WiFi.channel());
   myData.id = ID;
 
-  float humid = dhtSensor.readHumidity();
+  float humidity = dhtSensor.readHumidity();
   float temp = dhtSensor.readTemperature();
 
-  if (!isnan(humid)) {
-    myData.humidity = (humid);
+  if (!isnan(humidity)) {
+    myData.humidity = humidity;
   } else {
     myData.humidity = -10000; // handling the case if readHumidity return a NaN
   }
 
   if (!isnan(temp)) {
     myData.temp = temp;
-    localAlarm = (temp> ALARM_HOT);
-
-    unsigned long now = millis();
-
+    localAlarm = (temp > ALARM_HOT);
+    unsigned long now = millis(); //Time since the program start
 
     if(localAlarm){
-      if (now -lastAlertSentMs >=ALERT_RESEND_INTERVAL_MS){
+      if (now - lastAlertSentMs >= ALERT_RESEND_INTERVAL_MS){ // Check b
         Serial.println("Alert being sent");
         sendAlertToPeers(true);
         lastAlertSentMs = now;
@@ -182,6 +180,7 @@ void loop() {
         lastAlertSentMs = 0;
       }
     }
+
     lastlocalAlarm = localAlarm;
     if (localAlarm){
       raiseAlarm();

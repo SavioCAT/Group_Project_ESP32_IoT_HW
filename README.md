@@ -69,6 +69,24 @@ if (esp_now_init() != ESP_OK) { //Start and check if the esp-now init is okay or
 
 <p>Each node periodically reads its environmental data, creates the data structure, and then sends it to the master via ESP-NOW. A confirmation message is displayed if the transmission is successful. After a successful cycle, the ESP enters deep sleep mode. Each slave ESP is assigned a unique identifier during initialisation, which is useful for the NodeRed dashboard to identify the provenance of the data.</p>
 
+<p>In order to send/receive message by ESP-NOW we have to register callback function to configure the behaviour of the ESP when it have to send or receive a message.</p>
+
+```cpp
+esp_now_register_recv_cb(callback_receive); //Register the callback function when it receive a message 
+esp_now_register_send_cb(callback_sender); //Register the callback function when it send a message  
+```
+
+### Master code
+
+<p></p>
+
+## NodeRed interface
+
+<p></p>
+
+## Energy optimisation
+
+<p></p>
 
 ## Demonstration
 
