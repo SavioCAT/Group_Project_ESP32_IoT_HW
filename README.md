@@ -12,11 +12,11 @@ Group project for IoT lecture Heriot Watt
 
 ## Abstract
 
-<p>The main objective of this project was to design a ESP32 network, in order to recover environmental data. In our network we have one master and 4 slaves who are transmitting temperature and humidity data throught ESP-NOW protocol to the master. The main purpose of using this protocol was to make a simple, reliable and energy efficient network.</p>
+<p>The main objective of this project was to design an ESP32 network to recover environmental data. In our network, we have one master and four slaves that transmit temperature and humidity data via the ESP-NOW protocol to the master. The main purpose of using this protocol was to make a simple, reliable and energy-efficient network.</p>
 
 ## Code
 
-<p>In our code implementation we used a master-slave model. Where each slave node sends periodical updates about its data to the master node. Each slave node has an identical program except for its identifier. The master centralizes all environmental data and displays it in series and send it to the MQTT broker. Communication between slave and master use the ESP-NOW protocol, enabling fast, low-power transmission.</p>
+<p>In our code implementation, we used a master-slave model. Where each slave node sends periodical updates about its data to the master node, each slave node has an identical program except for its identifier. The master centralises all environmental data and displays it in series, and sends it to the MQTT broker. Communication between slave and master uses the ESP-NOW protocol, enabling fast, low-power transmission.</p>
 
 <ul>
     <li>Master node</li>
@@ -143,7 +143,8 @@ void OnDataRecv(const uint8_t * info, const uint8_t *incomingData, int len) {
 
 ## NodeRed interface
 
-<img width="1648" height="836" alt="image" src="https://github.com/user-attachments/assets/297872e3-2616-4f4f-b5c8-9f6528b0ab8d" />
+<img width="1360" height="1010" alt="image" src="https://github.com/user-attachments/assets/de7b1832-5eb3-4c86-ae92-29aa97eba144" />
+
 
 <p>The figure above shows the Node-RED flow used to visualise and control the ESP32 sensor network, where the ESP32 master publishes all the gathered sensor readings as a JSON object to the MQTT Mosquitto server using multiple topics, and Node-RED subscribes and publishes topic data to the ESP32. Each slave node has its own ID (ID 42-45), with its own dashboard panels showing temperature and humidity over time. Additionally, Node-RED has a threshold-update, reset and alerts system where the alert system is triggered if one of the slaves goes over the temperature and sets an alarm visually on screen, while the master sends the alarm data via ESP-NOW using the slave MACs </p>
 
