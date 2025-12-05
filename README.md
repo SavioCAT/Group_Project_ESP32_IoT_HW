@@ -144,7 +144,7 @@ void OnDataRecv(const uint8_t * info, const uint8_t *incomingData, int len) {
 }
 ```
 ### Updated Implementation
-
+#### Threshold
 <p>In the updated implementation of the code, the temperature threshold is no longer fixed in the code and is now more dynamic, allowing Node-RED to update the hot alarm and cold alarm limits through a form</p>
 
 <p>First, the code creates a topic for Node-RED to send as a JSON payload to</p>
@@ -170,7 +170,16 @@ typedef struct MessageConfigurateThreshold {
 }MessageConfigurateThreshold;
 ```
 <p>Each slave updates its internal alarm thresholds in real-time, without reflashing the ESP32. This feature allows remote threshold tuning for any condition and can be viewed in real time through the dashboard</p>
+####Improved Alarm System
+Instead of the slave to slave alarm system to improve robutsness and time it was decided to instead have the slaves send an alert blinking the local problem slave and sending the alert to the slave which then sends the alert to the other slaves and node red that one of the slaves has gone over the threshold. the system flags the system and sends it to the master using:
+```cpp
+typedef struct MessageAlert{
+   uint8_t IDMAC;
+   bool alertActive;
+} MessageAlert;
 
+Each slave will react differently depending on whether 
+####Reset System
 ## NodeRed interface
 
 <img width="1360" height="1010" alt="image" src="https://github.com/user-attachments/assets/de7b1832-5eb3-4c86-ae92-29aa97eba144" />
