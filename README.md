@@ -248,7 +248,3 @@ As demonstrated above, the measured milliamps of the system, where if it were aw
 ## Demonstration
 <p>Demonstration video of the newer system</p>
 <p>https://drive.google.com/file/d/1M2yXeJ-F9tAhhjPRXUV14yX-H8E87CDt/view?usp=drivesdk</p>
-
-## Physical measurements
-
-<p></p>
