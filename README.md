@@ -152,8 +152,8 @@ void OnDataRecv(const uint8_t * info, const uint8_t *incomingData, int len) {
 <p>The image above shows the key C data structures used by both the ESP32 and slave nodes. These structures are serialised into JSON and sent to Node-RED via the mosquitto MQTT, and transmitted into raw bytes over ESP-NOW for device-to-device connection </p>
 
 ### The structures include:
-- <strong> ResetCommand</strong>: communicates to the slave whether to trigger an alert for a reset
-- <strong>MassageAlert</strong>: communicates whether a slave has triggered a high-temperature alarm and which ID it was from
+- <strong> ResetCommand</strong>: instructs one or all the slaves to restart the system
+- <strong>MessageAlert</strong>: communicates whether a slave has triggered a high-temperature alarm and which ID it was from
 - <strong> MessageConfigurateThreshold</strong>: distributes the new threshold values for hot and cold from the Node-RED form to all the slaves or a specific slave
 - <strong>struct_message</strong>: the main telemetry structure that contains the Node-ID, Humidity, Temperature, and Alarm Flag.
 <p>These structures ensure consistent data is formatted and sent across the whole system of Node-RED, the master ESP32, MQTT, MongoDB, and all the slave nodes</p>
