@@ -141,6 +141,7 @@ void OnDataRecv(const uint8_t * info, const uint8_t *incomingData, int len) {
 }
 ```
 ### Updated Implementation
+
 <p>In the updated implementation of the code, the temperature threshold is no longer fixed in the code and is now more dynamic, allowing Node-RED to update the hot alarm and cold alarm limits through a form</p>
 
 <p>First, the code creates a topic for Node-RED to send as a JSON payload to</p>
@@ -178,6 +179,7 @@ typedef struct MessageConfigurateThreshold {
 <p>The image above shows the key C data structures used by both the ESP32 and slave nodes. These structures are serialised into JSON and sent to Node-RED via the mosquitto MQTT, and transmitted into raw bytes over ESP-NOW for device-to-device connection </p>
 
 ### The structures include:
+
 - <strong> ResetCommand</strong>: instructs one or all the slaves to restart the system
 - <strong>MessageAlert</strong>: communicates whether a slave has triggered a high-temperature alarm and which ID it was from
 - <strong> MessageConfigurateThreshold</strong>: distributes the new threshold values for hot and cold from the Node-RED form to all the slaves or a specific slave
