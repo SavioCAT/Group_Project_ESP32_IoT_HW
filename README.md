@@ -171,6 +171,10 @@ esp_deep_sleep_start(); // Set the ESP32 in deep sleep mode for the time setup i
 
 <p>In addition, using ESP-NOW instead of a Wi-Fi connection also allows us to save energy. </p>
 
+![WhatsApp Image 2025-12-05 at 20 03 23_f840bd97](https://github.com/user-attachments/assets/4e4bdf8b-1475-49e8-83bf-c015fd43de06)
+<img width="1280" height="960" alt="image" src="https://github.com/user-attachments/assets/e7282130-b8fe-4b32-a368-c84a2120a4d5" />
+As demonstrated above, the measured milliamps of the system, where if it were awake, it produces 38mA, and when in deep sleep, it produces 0.0002 mA and the duty cycle from the code provides 3s active/ 5 seconds of sleep giving it a current of 14 mA assuming the system utilises a 1000 mAh battery corresponding to an estimated 70 hours or 3 days under normal conditions
+
 ## Demonstration
 
 <p></p>
