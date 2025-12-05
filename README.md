@@ -1,4 +1,7 @@
-<img width="1360" height="1010" alt="image" src="https://github.com/user-attachments/assets/ad028eb9-fe3d-4084-8c68-5f80b1f5149b" /># Group Project ESP32 IoT HW
+<img width="1360" height="1010" alt="image" src="https://github.com/user-attachments/assets/ad028eb9-fe3d-4084-8c68-5f80b1f5149b" />
+
+# Group Project ESP32 IoT HW
+
 Group project for IoT lecture Heriot Watt
 
 > [!NOTE]
@@ -167,6 +170,7 @@ typedef struct MessageConfigurateThreshold {
 }MessageConfigurateThreshold;
 ```
 <p>Each slave updates its internal alarm thresholds in real-time, without reflashing the ESP32. This feature allows remote threshold tuning for any condition and can be viewed in real time through the dashboard</p>
+
 ## NodeRed interface
 
 <img width="1360" height="1010" alt="image" src="https://github.com/user-attachments/assets/de7b1832-5eb3-4c86-ae92-29aa97eba144" />
