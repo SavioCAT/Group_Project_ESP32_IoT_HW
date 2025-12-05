@@ -246,8 +246,8 @@ esp_deep_sleep_start(); // Set the ESP32 in deep sleep mode for the time setup i
 As demonstrated above, the measured milliamps of the system, where if it were awake, it produces 38mA, and when in deep sleep, it produces 0.0002 mA and the duty cycle from the code provides 3s active/ 5 seconds of sleep giving it a current of 14 mA assuming the system utilises a 1000 mAh battery corresponding to an estimated 70 hours or 3 days under normal conditions
 
 ## Demonstration
-
-<p></p>
+<p>Demonstration video of the newer system</p>
+<p>https://drive.google.com/file/d/1M2yXeJ-F9tAhhjPRXUV14yX-H8E87CDt/view?usp=drivesdk</p>
 
 ## Physical measurements
 
