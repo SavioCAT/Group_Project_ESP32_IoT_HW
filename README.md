@@ -7,11 +7,11 @@ Group project for IoT lecture Heriot Watt
 > [!NOTE]
 > GROUP MEMBERS
 > 1. Savio BOISSINOT H00513570
-> 2. Olayinka Abiodun
+> 2. Olayinka Abiodun H00519162
 > 3. Abdul Bahir Abdul Abbas H00507264
 > 4. Joseph William Abdo H00389925
-> 5.
-> 6.
+> 5. Dilu Sai Thumetti H00504008 
+> 
 
 ## Abstract
 
