@@ -183,6 +183,32 @@ typedef struct MessageAlert{
 
 <p>This improves the visivility of the system if theres any provlem across the network</p>
 #### Reset System
+<p>The updated system supports a fully remote reset functionality that can be published from Node-RED:</p>
+
+```cpp
+iot/command/reset/{ID}
+or
+iot/command/reset/all
+```
+<p>The master broadcasts a ResetCommand</p>
+
+```cpp
+typedef struct ResetCommand {
+   uint8_t targetID;
+   uint8_t cmdRes;
+} ResetCommand;
+```
+<p>The slaves restart automatically when the button has been pressed on Node-RED. This rnables remote recovery without physical access</p>
+#### Optimised Deep Sleep
+<p>Energy optimisation is extended with coordinated sleep behaviour:
+- Devices only enter deep sleep when no alarms are active locally or globally
+- Each slave goes through a cycle where it stays awake for 10 measurement cycles (3 seconds) Then sleeps for 5 seconds
+ - The average measurured current was 14mA
+- the Sleep current measured at 0.0002 mA while being awake measured at 38 mA
+
+This results in a significant battery savingd with an estimated 3 days from a 1000 mAh battery under normal non alarm condtions    
+</p>
+
 ## NodeRed interface
 
 <img width="1360" height="1010" alt="image" src="https://github.com/user-attachments/assets/de7b1832-5eb3-4c86-ae92-29aa97eba144" />
