@@ -6,7 +6,7 @@ Group project for IoT lecture Heriot Watt
 > 1. Savio BOISSINOT H00513570
 > 2. Olayinka Abiodun
 > 3. Abdul Bahir Abdul Abbas H00507264
-> 4. Joseph William Abdo
+> 4. Joseph William Abdo H00389925
 > 5.
 > 6.
 
@@ -145,11 +145,22 @@ void OnDataRecv(const uint8_t * info, const uint8_t *incomingData, int len) {
 
 <img width="1648" height="836" alt="image" src="https://github.com/user-attachments/assets/297872e3-2616-4f4f-b5c8-9f6528b0ab8d" />
 
-<p></p>
+<p>The figure above shows the Node-RED flow used to visualise and control the ESP32 sensor network, where the ESP32 master publishes all the gathered sensor readings as a JSON object to the MQTT Mosquitto server using multiple topics, and Node-RED subscribes and publishes topic data to the ESP32. Each slave node has its own ID (ID 42-45), with its own dashboard panels showing temperature and humidity over time. Additionally, Node-RED has a threshold-update, reset and alerts system where the alert system is triggered if one of the slaves goes over the temperature and sets an alarm visually on screen, while the master sends the alarm data via ESP-NOW using the slave MACs </p>
+
+<img width="1073" height="668" alt="image" src="https://github.com/user-attachments/assets/8c54c60c-0a61-4201-aa6c-9cc974974f58" />
+
+<p>The image above shows the key C data structures used by both the ESP32 and slave nodes. These structures are serialised into JSON and sent to Node-RED via the mosquitto MQTT, and transmitted into raw bytes over ESP-NOW for device-to-device connection </p>
+
+### The structures include:
+- <strong> ResetCommand</strong>: communicates to the slave whether to trigger an alert for a reset
+- <strong>MassageAlert</strong>: communicates whether a slave has triggered a high-temperature alarm and which ID it was from
+- <strong> MessageConfigurateThreshold</strong>: distributes the new threshold values for hot and cold from the Node-RED form to all the slaves or a specific slave
+- <strong>struct_message</strong>: the main telemetry structure that contains the Node-ID, Humidity, Temperature, and Alarm Flag.
+<p>These structures ensure consistent data is formatted and sent across the whole system of Node-RED, the master ESP32, MQTT, MongoDB, and all the slave nodes</p>
 
 ## Energy optimisation
 
-<p>We have optimized the energy consumption of slave nodes by using deep sleep, a mode in which the microcontroller shuts down almost all of its modules and consumes only a few microamperes.</p>
+<p>We have optimised the energy consumption of slave nodes by using deep sleep, a mode in which the microcontroller shuts down almost all of its modules and consumes only a few microamperes.</p>
 
 <p>In our code, the ESP32 remains awake only to read environmental data, send data to the master, and check for alarms. If there are no local or global alarms, it counts the activity cycles during which it is awake, and once a certain number is reached, it automatically goes into deep sleep.</p>
 
